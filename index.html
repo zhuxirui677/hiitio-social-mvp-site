@@ -50,11 +50,16 @@
         linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0, rgba(255, 255, 255, 0) 280px),
         var(--bg);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, "PingFang SC", "Microsoft Yahei", sans-serif;
-      font-size: 14px;
+      font-family: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei", sans-serif;
+      font-size: 13.5px;
+      line-height: 1.5;
       letter-spacing: 0;
       max-width: 100%;
       overflow-x: hidden;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-variant-numeric: tabular-nums;
     }
 
     button, input, select, textarea {
@@ -114,14 +119,14 @@
 
     .brand-title {
       font-size: 15px;
-      font-weight: 800;
-      line-height: 1.15;
+      font-weight: 700;
+      line-height: 1.1;
     }
 
     .muted {
       color: var(--muted);
       font-size: 12px;
-      line-height: 1.45;
+      line-height: 1.5;
       overflow-wrap: anywhere;
     }
 
@@ -143,7 +148,7 @@
       background: transparent;
       text-align: left;
       color: #c8ced7;
-      font-weight: 700;
+      font-weight: 650;
       position: relative;
       transition: background 140ms ease, border-color 140ms ease, color 140ms ease;
     }
@@ -186,7 +191,7 @@
     .side-label {
       color: #f8fafc;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 700;
       margin-bottom: 10px;
     }
 
@@ -197,6 +202,7 @@
       gap: 8px;
       color: #c8ced7;
       font-size: 13px;
+      line-height: 1.35;
     }
 
     .check input {
@@ -267,8 +273,9 @@
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.76);
       color: #354052;
-      font-size: 12px;
-      font-weight: 800;
+      font-size: 11.5px;
+      font-weight: 700;
+      line-height: 1;
       box-shadow: 0 1px 0 rgba(27, 33, 44, 0.04);
       white-space: nowrap;
     }
@@ -303,19 +310,24 @@
 
     h1 {
       font-size: clamp(25px, 2.5vw, 38px);
-      line-height: 1.12;
+      line-height: 1.06;
       letter-spacing: 0;
       overflow-wrap: anywhere;
       max-width: 760px;
+      font-weight: 800;
     }
 
     h2 {
-      font-size: 17px;
+      font-size: 16px;
       margin-bottom: 4px;
+      line-height: 1.18;
+      font-weight: 700;
     }
 
     h3 {
-      font-size: 13px;
+      font-size: 12.5px;
+      line-height: 1.25;
+      font-weight: 700;
     }
 
     .toolbar {
@@ -336,7 +348,8 @@
       background: var(--ink);
       color: #fff;
       white-space: nowrap;
-      font-weight: 800;
+      font-weight: 700;
+      font-size: 13px;
       box-shadow: 0 1px 0 rgba(17, 24, 39, 0.08);
       transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
     }
@@ -379,6 +392,7 @@
       padding: 0 10px;
       background: transparent;
       color: #475467;
+      font-weight: 650;
     }
 
     .seg button.active {
@@ -551,6 +565,19 @@
       background: #e6ebf2;
     }
 
+    .calendar.calendar-day {
+      grid-template-columns: minmax(320px, 1fr);
+      min-width: min(100%, 520px);
+    }
+
+    .calendar.calendar-month .day {
+      min-height: 150px;
+    }
+
+    .calendar.calendar-day .day {
+      min-height: 360px;
+    }
+
     .day-name,
     .day {
       background: var(--surface);
@@ -578,6 +605,11 @@
       padding: 9px;
       background:
         linear-gradient(180deg, #fff 0%, #fbfcfe 100%);
+    }
+
+    .day.empty {
+      background: #f3f6fa;
+      min-height: 90px;
     }
 
     .day.drop-target {
@@ -1119,7 +1151,7 @@
 
       <section class="kpis" aria-label="核心指标">
         <div class="kpi"><div class="muted">账号数</div><strong id="kpiAccounts">0</strong><div class="muted">国内 + 海外</div></div>
-        <div class="kpi"><div class="muted">本周排期</div><strong id="kpiScheduled">0</strong><div class="muted">目标 2-3 条/账号</div></div>
+        <div class="kpi"><div class="muted" id="kpiScheduleLabel">本周排期</div><strong id="kpiScheduled">0</strong><div class="muted">目标 2-3 条/账号</div></div>
         <div class="kpi"><div class="muted">发布风险</div><strong id="kpiRisk">0</strong><div class="muted">失败/阻塞/需人工</div></div>
         <div class="kpi"><div class="muted">素材节省</div><strong id="kpiSaved">0%</strong><div class="muted">最近一次输出</div></div>
         <div class="kpi"><div class="muted">竞品预警</div><strong id="kpiBreakouts">0</strong><div class="muted">breakout_high/medium</div></div>
@@ -1132,7 +1164,7 @@
             <div class="panel-head">
               <div>
                 <h2>全平台排期日历</h2>
-                <div class="muted">拖动内容到其他日期即可改期；海外账号默认 10:00，国内账号默认 18:00。</div>
+                <div class="muted"><span id="calendarRangeText">当前周</span> · 拖动内容到其他日期即可改期；海外账号默认 10:00，国内账号默认 18:00。</div>
               </div>
               <div class="toolbar">
                 <div class="seg" aria-label="日历视图">
@@ -1405,6 +1437,8 @@
 
     const state = {
       selectedPostId: "p3",
+      calendarView: "week",
+      anchorDate: "2026-07-15",
       compressionMode: "quality_first",
       lastSavedPct: 0,
       asset: null,
@@ -1515,12 +1549,97 @@
       return true;
     }
 
+    function parseDateKey(key) {
+      const [year, month, day] = key.split("-").map(Number);
+      return new Date(year, month - 1, day);
+    }
+
+    function dateKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function addDays(date, amount) {
+      const next = new Date(date);
+      next.setDate(next.getDate() + amount);
+      return next;
+    }
+
+    function startOfWeek(date) {
+      const next = new Date(date);
+      const offset = (next.getDay() + 6) % 7;
+      next.setDate(next.getDate() - offset);
+      return next;
+    }
+
+    function formatDayLabel(key) {
+      const date = parseDateKey(key);
+      const names = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+      return `${names[date.getDay()]} ${date.getMonth() + 1}/${date.getDate()}`;
+    }
+
+    function calendarDays(includeEmpty = true) {
+      const anchor = parseDateKey(state.anchorDate);
+      if (state.calendarView === "day") {
+        return [{ date: state.anchorDate, label: formatDayLabel(state.anchorDate) }];
+      }
+      if (state.calendarView === "month") {
+        const first = new Date(anchor.getFullYear(), anchor.getMonth(), 1);
+        const last = new Date(anchor.getFullYear(), anchor.getMonth() + 1, 0);
+        const leading = (first.getDay() + 6) % 7;
+        const days = [];
+        if (includeEmpty) {
+          for (let i = 0; i < leading; i += 1) days.push({ empty: true });
+        }
+        for (let day = 1; day <= last.getDate(); day += 1) {
+          const key = dateKey(new Date(anchor.getFullYear(), anchor.getMonth(), day));
+          days.push({ date: key, label: formatDayLabel(key) });
+        }
+        if (includeEmpty) {
+          while (days.length % 7 !== 0) days.push({ empty: true });
+        }
+        return days;
+      }
+      const start = startOfWeek(anchor);
+      return Array.from({ length: 7 }, (_, index) => {
+        const key = dateKey(addDays(start, index));
+        return { date: key, label: formatDayLabel(key) };
+      });
+    }
+
+    function calendarDateSet() {
+      return new Set(calendarDays(false).map((day) => day.date).filter(Boolean));
+    }
+
+    function calendarRangeText() {
+      const days = calendarDays(false);
+      if (state.calendarView === "day") return `${days[0].label} 日视图`;
+      if (state.calendarView === "month") {
+        const anchor = parseDateKey(state.anchorDate);
+        return `${anchor.getFullYear()}年${anchor.getMonth() + 1}月 月视图`;
+      }
+      return `${days[0].label} - ${days[days.length - 1].label} 周视图`;
+    }
+
     function renderCalendar() {
       const grid = byId("calendarGrid");
       const filters = currentFilters();
-      grid.innerHTML = week.map((day) => `<div class="day-name">${day.label.split(" ")[0]}</div>`).join("");
+      const days = calendarDays(true);
+      const headers = state.calendarView === "day" ? ["当前日"] : ["周一", "周二", "周三", "周四", "周五", "周六", "周日"];
+      grid.className = `calendar calendar-${state.calendarView}`;
+      grid.innerHTML = headers.map((name) => `<div class="day-name">${name}</div>`).join("");
+      byId("calendarRangeText").textContent = calendarRangeText();
 
-      week.forEach((day) => {
+      days.forEach((day) => {
+        if (day.empty) {
+          const empty = document.createElement("div");
+          empty.className = "day empty";
+          empty.setAttribute("aria-hidden", "true");
+          grid.appendChild(empty);
+          return;
+        }
         const dayPosts = state.posts.filter((post) => post.date === day.date && postVisible(post, filters));
         const cell = document.createElement("div");
         cell.className = "day";
@@ -1539,7 +1658,7 @@
           if (post) {
             post.date = day.date;
             const account = accountFor(post);
-            post.time = defaultTime[account.region];
+            post.time = account ? defaultTime[account.region] : "待确认";
             toast(`已把「${post.topic}」移动到 ${day.label}`);
             renderAll();
           }
@@ -1553,6 +1672,16 @@
     function renderPost(post) {
       const account = accountFor(post);
       const postEl = document.createElement("article");
+      if (!account) {
+        postEl.className = "post failed";
+        postEl.dataset.postId = post.id;
+        postEl.innerHTML = `
+          <div class="post-title">${post.topic || "未命名排期"}</div>
+          <div class="muted">缺少有效账号，请重新编辑</div>
+          <div class="post-meta"><span class="tag red">blocked</span></div>
+        `;
+        return postEl;
+      }
       const regionClass = account.region === "domestic" ? "domestic" : "";
       postEl.className = `post ${regionClass} ${post.status}`;
       postEl.draggable = true;
@@ -1644,9 +1773,10 @@
       const item = state.competitorPosts.find((post) => post.id === id);
       if (!item) return;
       const account = state.accounts.find((candidate) => candidate.platform === item.platform) || state.accounts[0];
+      const targetDate = calendarDays(false).find((day) => day.date)?.date || state.anchorDate;
       const post = {
         id: "p" + Date.now(),
-        date: "2026-07-18",
+        date: targetDate,
         accountId: account.id,
         topic: `${item.product}: 原创跟进 ${item.hook}`,
         product: item.product,
@@ -1659,7 +1789,7 @@
       state.posts.push(post);
       state.selectedPostId = post.id;
       renderAll();
-      toast("已生成原创跟进草稿并放入 7/18 日历");
+      toast(`已生成原创跟进草稿并放入 ${formatDayLabel(targetDate)} 日历`);
     }
 
     function renderAnalytics() {
@@ -1751,6 +1881,13 @@
     function preflight(post) {
       const account = accountFor(post);
       const checks = [];
+      if (!account) {
+        return [{
+          title: "账号权限",
+          status: "blocked",
+          detail: "排期没有关联有效账号，请重新选择账号。"
+        }];
+      }
       checks.push({
         title: "账号权限",
         status: account.auth === "permission_unknown" ? "manual_review" : "ready",
@@ -1810,8 +1947,12 @@
     }
 
     function renderKpis() {
+      const range = calendarDateSet();
+      const visibleScheduled = state.posts.filter((post) => range.has(post.date) && ["scheduled", "queued", "draft"].includes(post.status)).length;
+      const viewLabel = state.calendarView === "day" ? "当日排期" : state.calendarView === "month" ? "本月排期" : "本周排期";
       byId("kpiAccounts").textContent = state.accounts.length;
-      byId("kpiScheduled").textContent = state.posts.filter((post) => ["scheduled", "queued", "draft"].includes(post.status)).length;
+      byId("kpiScheduleLabel").textContent = viewLabel;
+      byId("kpiScheduled").textContent = visibleScheduled;
       byId("kpiRisk").textContent = state.posts.filter((post) => ["failed", "blocked"].includes(post.status) || preflight(post).some((row) => row.status === "blocked")).length;
       byId("kpiSaved").textContent = state.lastSavedPct ? state.lastSavedPct.toFixed(1) + "%" : "0%";
       byId("kpiBreakouts").textContent = state.competitorPosts.filter((post) => post.label === "breakout_high" || post.label === "breakout_medium").length;
@@ -1951,16 +2092,19 @@
     }
 
     function exportReport() {
+      const range = calendarDateSet();
+      const rangePosts = state.posts.filter((post) => range.has(post.date));
       const report = [
         "# HIITIO 社媒工作台 MVP 周报",
         "",
         `- 账号数：${state.accounts.length}`,
-        `- 本周排期：${state.posts.length}`,
+        `- 当前视图：${calendarRangeText()}`,
+        `- 当前视图排期：${rangePosts.length}`,
         `- 竞品预警：${state.competitorPosts.filter((post) => post.label !== "monitor").length}`,
         `- 最近素材节省：${state.lastSavedPct ? state.lastSavedPct.toFixed(1) + "%" : "待生成"}`,
         "",
         "## 风险",
-        ...state.posts.filter((post) => preflight(post).some((row) => row.status === "blocked")).map((post) => `- ${post.topic}: 存在发布阻塞，请看 preflight。`),
+        ...rangePosts.filter((post) => preflight(post).some((row) => row.status === "blocked")).map((post) => `- ${post.topic}: 存在发布阻塞，请看 preflight。`),
         "",
         "## 下一步",
         "- 接入真实平台 OAuth/API 前，继续使用 manual package 跑完整闭环。",
@@ -1971,6 +2115,10 @@
 
     function downloadText(filename, content, type) {
       const blob = new Blob([content], { type });
+      if (!URL.createObjectURL) {
+        toast("当前浏览器不支持本地导出，请复制 JSON/周报内容");
+        return;
+      }
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -1979,10 +2127,29 @@
       URL.revokeObjectURL(url);
     }
 
+    function openDialog(dialog) {
+      if (typeof dialog.showModal === "function") {
+        dialog.showModal();
+      } else {
+        dialog.setAttribute("open", "");
+      }
+    }
+
+    function closeDialog(dialog) {
+      if (typeof dialog.close === "function") {
+        dialog.close();
+      } else {
+        dialog.removeAttribute("open");
+      }
+    }
+
     function setupDraftDialog() {
       byId("draftAccount").innerHTML = state.accounts.map((account) => `<option value="${account.id}">${platformName[account.platform]} · ${account.name}</option>`).join("");
-      byId("draftDate").innerHTML = week.map((day) => `<option value="${day.date}">${day.label}</option>`).join("");
-      byId("openDraftBtn").addEventListener("click", () => byId("draftDialog").showModal());
+      refreshDraftDates();
+      byId("openDraftBtn").addEventListener("click", () => {
+        refreshDraftDates();
+        openDialog(byId("draftDialog"));
+      });
       byId("createDraftSubmit").addEventListener("click", (event) => {
         event.preventDefault();
         const accountId = byId("draftAccount").value;
@@ -2000,10 +2167,18 @@
         };
         state.posts.push(post);
         state.selectedPostId = post.id;
-        byId("draftDialog").close();
+        closeDialog(byId("draftDialog"));
         renderAll();
         toast("新排期已创建");
       });
+    }
+
+    function refreshDraftDates() {
+      const options = calendarDays(false);
+      byId("draftDate").innerHTML = options.map((day) => `<option value="${day.date}">${day.label}</option>`).join("");
+      if (options.some((day) => day.date === state.anchorDate)) {
+        byId("draftDate").value = state.anchorDate;
+      }
     }
 
     function bindEvents() {
@@ -2019,7 +2194,10 @@
         button.addEventListener("click", () => {
           document.querySelectorAll("[data-calendar-view]").forEach((item) => item.classList.remove("active"));
           button.classList.add("active");
-          toast(`已切换到${button.textContent}视图；MVP 当前共用同一数据模型`);
+          state.calendarView = button.dataset.calendarView;
+          renderAll();
+          refreshDraftDates();
+          toast(`已切换到${button.textContent}视图`);
         });
       });
       document.querySelectorAll("[data-compress-mode]").forEach((button) => {
